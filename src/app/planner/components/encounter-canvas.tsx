@@ -1,129 +1,11 @@
 import { TestingGrounds } from "@/components/models/testing-grounds";
-import useScreenToWorld from "@/hooks/useScreenToWorld";
-import { useSnapToGround } from "@/hooks/useSnapToGround";
-import {
-	CameraControls,
-	DragControls,
-	Environment,
-	PivotControls,
-} from "@react-three/drei";
+import { CameraControls, Environment, Grid } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
-import RaycastVisualizer from "./utilities/raycast-visualizer";
+import DraggedPlayers from "./draggable-player";
+import { DraggableItemData } from "../types/planner-types";
 import { useControls } from "leva";
-
-interface DraggableItemData {
-	type: string;
-	id: string;
-	label: string;
-	mouseDropPosition?: [number, number];
-}
-
-interface RaycastDataProps {
-	origin: THREE.Vector3;
-	direction: THREE.Vector3;
-	hit: boolean;
-	hitPoint: THREE.Vector3 | null;
-}
-
-function DraggedPlayers({ items }: { items: DraggableItemData[] }) {
-	const screenToWorld = useScreenToWorld();
-	const positionsRef = useRef<{ [id: string]: [number, number, number] }>({});
-	const { handleSnapToGround } = useSnapToGround();
-	const [raycastVisible, setRaycastVisible] = useState<boolean>(true);
-	const [raycastData, setRaycastData] = useState<RaycastDataProps>({
-		origin: new THREE.Vector3(0, 0, 0),
-		direction: new THREE.Vector3(0, -1, 0),
-		hit: false,
-		hitPoint: null,
-	});
-	const raycastUtilties = useControls("Raycast Utilities", {
-		"Show Raycast": {
-			value: false,
-			onChange: (value) => {
-				setRaycastVisible(value);
-			},
-		},
-	});
-
-	// Sets up world positions for items that have been dropped
-	items.forEach((item) => {
-		if (item.id && item.mouseDropPosition && !positionsRef.current[item.id]) {
-			const worldPos = screenToWorld(
-				item.mouseDropPosition[0],
-				item.mouseDropPosition[1]
-			);
-
-			if (worldPos) {
-				positionsRef.current[item.id] = worldPos;
-			} else {
-				console.warn(
-					`Item "${item.label}" dropped off valid placement surface.`
-				);
-			}
-		}
-	});
-
-	// Handles new item position and raycast based on mouse position
-	const handleDrag = (
-		localMatrix: THREE.Matrix4,
-		deltaLocalMatrix: THREE.Matrix4,
-		worldMatrix: THREE.Matrix4,
-		deltaWorldMatrix: THREE.Matrix4
-	) => {
-		const position = new THREE.Vector3();
-		position.setFromMatrixPosition(worldMatrix);
-		const result = handleSnapToGround(localMatrix, worldMatrix);
-
-		setRaycastData({
-			origin: result.rayOrigin,
-			direction: result.rayDirection,
-			hit: result.hit,
-			hitPoint: result.hit ? result.hitPoint : null,
-		});
-	};
-
-	return (
-		<>
-			{raycastVisible && <RaycastVisualizer raycastData={raycastData} />}
-			{items.map((item, index) => {
-				const position = (item.id && positionsRef.current[item.id]) || [
-					0, 0.5, 0,
-				];
-
-				return (
-					<group position={position}>
-						<DragControls
-							axisLock="y"
-							key={item.id || `item-${index}`}
-							onDrag={handleDrag}
-						>
-							<PivotControls
-								scale={3}
-								lineWidth={5}
-								autoTransform={true}
-								activeAxes={[true, false, true]}
-								disableSliders={true}
-								disableAxes={true}
-								disableScaling={true}
-								anchor={[0, 0, 0]}
-								offset={[0, 0, 0]}
-								axisColors={["#ff0000", "#00ff00", "#0000ff"]}
-								hoveredColor="#ffff00"
-							>
-								<mesh key={item.id || `mesh-${index}`} castShadow>
-									<boxGeometry args={[1, 1, 1]} />
-									<meshStandardMaterial color="red" />
-								</mesh>
-							</PivotControls>
-						</DragControls>
-					</group>
-				);
-			})}
-		</>
-	);
-}
 
 function Floor() {
 	const meshRef = useRef<THREE.Mesh>(null);
@@ -134,9 +16,77 @@ function Floor() {
 			placementGroupRef.current.userData.isPlacementGroup = true;
 		}
 	}, []);
+	const gridProps = useControls({
+		cellSize: {
+			value: 0.5,
+			min: 0.1,
+			max: 10,
+			step: 0.1,
+			label: "Cell Size",
+		},
+		cellThickness: {
+			value: 0.5,
+			min: 0.1,
+			max: 5,
+			step: 0.1,
+			label: "Cell Thickness",
+		},
+		cellColor: {
+			value: "#000000", // leva uses hex strings for colors
+			label: "Cell Color",
+		},
+		sectionSize: {
+			value: 1,
+			min: 0.5,
+			max: 20,
+			step: 0.5,
+			label: "Section Size",
+		},
+		sectionThickness: {
+			value: 1,
+			min: 0.1,
+			max: 10,
+			step: 0.1,
+			label: "Section Thickness",
+		},
+		sectionColor: {
+			value: "#2080ff", // leva uses hex strings for colors
+			label: "Section Color",
+		},
+		followCamera: {
+			value: false,
+			label: "Follow Camera",
+		},
+		infiniteGrid: {
+			value: true, // Matches your current Grid prop
+			label: "Infinite Grid",
+		},
+		fadeDistance: {
+			value: 100,
+			min: 10,
+			max: 1000,
+			step: 10,
+			label: "Fade Distance",
+		},
+		fadeStrength: {
+			value: 1,
+			min: 0,
+			max: 5,
+			step: 0.1,
+			label: "Fade Strength",
+		},
+		fadeFrom: {
+			value: 1, // Default is camera (1)
+			min: 0,
+			max: 1,
+			step: 0.1,
+			label: "Fade From (0=Origin, 1=Camera)",
+		},
+	});
 
 	return (
 		<group ref={placementGroupRef}>
+			{/* <Grid {...gridProps} /> */}
 			<TestingGrounds position={[-11, -1, 0]} />
 			<mesh
 				ref={meshRef}
