@@ -1,7 +1,12 @@
 import { TestingGrounds } from "@/components/models/testing-grounds";
-import { CameraControls, Environment, Grid } from "@react-three/drei";
+import {
+	CameraControls,
+	DragControls,
+	Environment,
+	Grid,
+} from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import DraggedPlayers from "./draggable-player";
 import { DraggableItemData } from "../types/planner-types";
@@ -86,7 +91,6 @@ function Floor() {
 
 	return (
 		<group ref={placementGroupRef}>
-			{/* <Grid {...gridProps} /> */}
 			<TestingGrounds position={[-11, -1, 0]} />
 			<mesh
 				ref={meshRef}
@@ -104,10 +108,18 @@ function Floor() {
 export default function EncounterCanvas({
 	backgroundColor,
 	items,
+	setSelectedUnit,
 }: {
 	backgroundColor: string;
 	items: DraggableItemData[];
+	setSelectedUnit: (unit: string | null) => void;
 }) {
+
+
+	useEffect(() => {
+		console.log("items", items);
+	}, [items]);
+
 	return (
 		<Canvas
 			frameloop="demand"
@@ -129,7 +141,8 @@ export default function EncounterCanvas({
 				mouseButtons={{ left: 0, middle: 2, right: 1, wheel: 16 }}
 			/>
 
-			<DraggedPlayers items={items} />
+			<DraggedPlayers items={items} setSelectedUnit={setSelectedUnit} />
+		
 		</Canvas>
 	);
 }

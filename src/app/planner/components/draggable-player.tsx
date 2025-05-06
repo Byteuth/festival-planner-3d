@@ -9,8 +9,10 @@ import { DraggableItemData, RaycastDataProps } from "../types/planner-types";
 
 export default function DraggedPlayers({
 	items,
+	setSelectedUnit,
 }: {
 	items: DraggableItemData[];
+	setSelectedUnit: (unit: string | null) => void;
 }) {
 	const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 	const screenToWorld = useScreenToWorld();
@@ -46,7 +48,6 @@ export default function DraggedPlayers({
 			(item) =>
 				item.id && !trackedItems.some((tracked) => tracked.id === item.id)
 		);
-
 		if (newItemsToTrack.length > 0) {
 			const initialTrackedData = newItemsToTrack.map((item) => {
 				let initialPosition: [number, number, number] = [0, 0.5, 0];
@@ -87,7 +88,6 @@ export default function DraggedPlayers({
 			worldMatrix
 		);
 		const result = handleSnapToGround(localMatrix, worldMatrix);
-		console.log("Snap Result:", result);
 
 		if (result?.hit && result?.hitPoint) {
 			latestSnappedPositionRef.current = result.hitPoint.clone();
@@ -135,13 +135,6 @@ export default function DraggedPlayers({
 				)
 			);
 
-			console.log(`Item ${draggingItemId} final ground position logged:`, [
-				finalGroundPosition.x,
-				finalGroundPosition.y,
-				finalGroundPosition.z,
-			]);
-
-			// Update the mesh position directly
 			const mesh = meshRefs.current[draggingItemId];
 			if (mesh) {
 				mesh.position.set(
@@ -169,10 +162,14 @@ export default function DraggedPlayers({
 			return;
 		}
 
+		if (draggingItemId === itemId) return;
+
 		if (selectedItemId === itemId) {
 			setSelectedItemId(null);
+			setSelectedUnit(null);
 		} else {
 			setSelectedItemId(itemId);
+			setSelectedUnit(itemId);
 		}
 	};
 
@@ -180,69 +177,81 @@ export default function DraggedPlayers({
 		<>
 			{raycastVisible && <RaycastVisualizer raycastData={raycastData} />}
 
-			{trackedItems.map((trackedItem) => {
-				const item = items.find((i) => i.id === trackedItem.id);
-				if (!item) return null;
+			<group
+				// Handle clicks on empty space
+				onPointerMissed={(event: MouseEvent) => {
+					if (event.button === 0) {
+						setSelectedItemId(null);
+						setSelectedUnit(null);
+					}
+				}}
+			>
+				{trackedItems.map((trackedItem) => {
+					const item = items.find((i) => i.id === trackedItem.id);
+					if (!item) return null;
 
-				const itemKey = trackedItem.id;
-				const groupPosition = trackedItem.position;
-				const isThisItemSelected = selectedItemId === trackedItem.id;
+					const itemKey = trackedItem.id;
+					const groupPosition = trackedItem.position;
+					const isThisItemSelected = selectedItemId === trackedItem.id;
 
-				return (
-					<group
-						key={`${itemKey}-${groupPosition.join(",")}`}
-						position={groupPosition}
-					>
-						{isThisItemSelected ? (
-							<DragControls
-								axisLock="y"
-								onDrag={handleDrag}
-								onDragStart={() => handleDragStart(trackedItem.id)}
-								onDragEnd={handleDragEnd}
-							>
-								<PivotControls
-									scale={3}
-									lineWidth={5}
-									autoTransform={true}
-									activeAxes={[true, false, true]}
-									disableSliders={true}
-									disableAxes={true}
-									disableScaling={true}
-									anchor={[0, 0, 0]}
-									offset={[0, 0, 0]}
-									axisColors={["#ff0000", "#00ff00", "#0000ff"]}
-									hoveredColor="#ffff00"
+					return (
+						<group
+							key={`${itemKey}-${groupPosition.join(",")}`}
+							position={groupPosition}
+						>
+							{isThisItemSelected ? (
+								<DragControls
+									axisLock="y"
+									onDrag={handleDrag}
+									onDragStart={() => handleDragStart(trackedItem.id)}
+									onDragEnd={handleDragEnd}
 								>
-									<mesh
-										castShadow
-										ref={(ref) => {
-											meshRefs.current[itemKey] = ref;
-										}}
-										position={[0, 0.5, 0]}
-										onClick={(event) => handleMeshClick(trackedItem.id, event)}
+									<PivotControls
+										scale={3}
+										lineWidth={5}
+										autoTransform={true}
+										activeAxes={[true, false, true]}
+										disableSliders={true}
+										disableAxes={true}
+										disableScaling={true}
+										anchor={[0, 0, 0]}
+										offset={[0, 0, 0]}
+										axisColors={["#ff0000", "#00ff00", "#0000ff"]}
+										hoveredColor="#ffff00"
 									>
-										<boxGeometry args={[1, 1, 1]} />
-										<meshStandardMaterial color={"red"} />
-										<Outlines thickness={1} color="black" />
-									</mesh>
-								</PivotControls>
-							</DragControls>
-						) : (
-							<mesh
-								castShadow
-								ref={(ref) => {
-									meshRefs.current[itemKey] = ref;
-								}}
-								position={[0, 0.5, 0]}
-								onClick={(event) => handleMeshClick(trackedItem.id, event)}
-							>
-								<boxGeometry args={[1, 1, 1]} />
-								<meshStandardMaterial color={"blue"} />
-							</mesh>
-						)}
-					</group>
-				);
-			})}
+										<mesh
+											castShadow
+											ref={(ref) => {
+												meshRefs.current[itemKey] = ref;
+											}}
+											position={[0, 0.5, 0]}
+											onClick={(event) =>
+												handleMeshClick(trackedItem.id, event)
+											}
+										>
+											<boxGeometry args={[1, 1, 1]} />
+											<meshStandardMaterial color={"red"} />
+											<Outlines thickness={1} color="black" />
+										</mesh>
+									</PivotControls>
+								</DragControls>
+							) : (
+								<mesh
+									castShadow
+									ref={(ref) => {
+										meshRefs.current[itemKey] = ref;
+									}}
+									position={[0, 0.5, 0]}
+									onClick={(event) => handleMeshClick(trackedItem.id, event)}
+								>
+									<boxGeometry args={[1, 1, 1]} />
+									<meshStandardMaterial color={"blue"} />
+								</mesh>
+							)}
+						</group>
+					);
+				})}
+			</group>
 		</>
 	);
 }

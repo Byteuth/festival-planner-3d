@@ -105,7 +105,6 @@ export default function Page() {
 	const [activeId, setActiveId] = useState<string | null>(null);
 	const [canvasItems, setCanvasItems] = useState<DraggableItemData[]>([]);
 	const mousePositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
 			activationConstraint: {
@@ -113,8 +112,8 @@ export default function Page() {
 			},
 		})
 	);
-
 	const canvasDroppableId = "encounter-canvas-droppable";
+	const [selectedUnit, setSelectedUnit] = useState<string | null>(null); //selected 3d unit
 
 	useEffect(() => {
 		const bgColor = raids.find(
@@ -128,9 +127,6 @@ export default function Page() {
 			x: event.clientX,
 			y: event.clientY,
 		};
-		console.log(
-			`Native mousemove at: x=${mousePositionRef.current.x}, y=${mousePositionRef.current.y}`
-		);
 	}, []);
 
 	const handleDragStart = (event: DragStartEvent) => {
@@ -151,13 +147,6 @@ export default function Page() {
 			const droppedOverId = over.id;
 
 			if (droppedOverId === canvasDroppableId) {
-				console.log(
-					`Dropped "${draggedItemData.label}" on Canvas (ID: ${droppedOverId}).`
-				);
-				console.log(
-					`Mouse dropped at: x=${mousePositionRef.current.x}, y=${mousePositionRef.current.y}`
-				);
-
 				const newItem: DraggableItemData = {
 					id: `${draggedItemData.id}-${Date.now()}`,
 					type: draggedItemData.type,
@@ -189,69 +178,97 @@ export default function Page() {
 		? draggableItems.find((item) => item.id === activeId)
 		: null;
 
+	useEffect(() => {
+		if (selectedUnit) {
+			console.log(`Selected unit: ${selectedUnit}`);
+		} else {
+			console.log("No unit selected.");
+		}
+	}, [selectedUnit]);
+
 	return (
-		<DndContext
-			sensors={sensors}
-			onDragStart={handleDragStart}
-			onDragEnd={handleDragEnd}
-		>
-			<div className="py-8 flex flex-col">
-				<div className="-translate-y-6 z-20">
-					<GlobalNavigationBar
-						currentSelection={currentSelection}
-						setCurrentSelection={setCurrentSelection}
-					/>
-				</div>
-
-				<div className="w-auto h-[85vh] px-4 flex-grow">
-					<ResizablePanelGroup direction="horizontal" className="h-full w-full">
-						<ResizablePanel defaultSize={20}>
-							<div className="flex h-full items-center justify-center p-6 border">
-								<ScrollArea className="w-full h-full">
-									{draggableItems.map((item) => (
-										<DraggableItem
-											key={item.id}
-											id={item.id}
-											label={item.label}
-											type={item.type}
-										/>
-									))}
-								</ScrollArea>
-							</div>
-						</ResizablePanel>
-
-						<ResizableHandle withHandle />
-
-						<ResizablePanel defaultSize={60}>
-							<DroppableArea
-								id={canvasDroppableId}
-								className="flex h-full w-full items-center justify-center"
-							>
-								<EncounterCanvas
-									backgroundColor={backgroundColor}
-									items={canvasItems}
-								/>
-							</DroppableArea>
-						</ResizablePanel>
-
-						<ResizableHandle withHandle />
-
-						<ResizablePanel defaultSize={20}>
-							<div className="flex h-full items-center justify-center p-6 rounded>">
-								<p>Right Panel</p>
-							</div>
-						</ResizablePanel>
-					</ResizablePanelGroup>
-				</div>
-			</div>
-
-			<DragOverlay>
-				{activeItemData ? (
-					<div className="bg-blue-500 p-2 rounded shadow opacity-80">
-						{activeItemData.label}
+		<>
+			<DndContext
+				sensors={sensors}
+				onDragStart={handleDragStart}
+				onDragEnd={handleDragEnd}
+			>
+				<div className="py-8 flex flex-col">
+					<div className="-translate-y-6 z-20">
+						<GlobalNavigationBar
+							currentSelection={currentSelection}
+							setCurrentSelection={setCurrentSelection}
+						/>
 					</div>
-				) : null}
-			</DragOverlay>
-		</DndContext>
+
+					<div className="w-auto h-[85vh] px-4 flex-grow">
+						<ResizablePanelGroup
+							direction="horizontal"
+							className="h-full w-full"
+						>
+							<ResizablePanel defaultSize={20}>
+								<div className="flex h-full items-center justify-center p-6 border">
+									<ScrollArea className="w-full h-full">
+										{draggableItems.map((item) => (
+											<DraggableItem
+												key={item.id}
+												id={item.id}
+												label={item.label}
+												type={item.type}
+											/>
+										))}
+									</ScrollArea>
+								</div>
+							</ResizablePanel>
+
+							<ResizableHandle withHandle />
+
+							<ResizablePanel defaultSize={60} className="relative">
+								<DroppableArea
+									id={canvasDroppableId}
+									className="flex h-full w-full items-center justify-center"
+								>
+									<EncounterCanvas
+										backgroundColor={backgroundColor}
+										items={canvasItems}
+										setSelectedUnit={setSelectedUnit}
+									/>
+								</DroppableArea>
+
+								{/* Unit-frame */}
+								{selectedUnit && (
+									<div className="absolute top-0 left-0 flex items-center justify-center p-4">
+										<div className="flex items-center">
+											<div className="w-24 h-24 bg-black rounded-full flex-shrink-0"></div>
+											<div className="flex flex-col w-64">
+												<div className="bg-pink-500 h-8 "> {selectedUnit}</div>
+												<div className="bg-green-500 h-6 "></div>
+												<div className="bg-blue-500 h-6"></div>
+											</div>
+										</div>
+									</div>
+								)}
+							</ResizablePanel>
+
+							<ResizableHandle withHandle />
+
+							<ResizablePanel defaultSize={20}>
+								<div className="flex h-full items-center justify-center p-6 rounded>">
+									<p>Right Panel</p>
+								</div>
+							</ResizablePanel>
+						</ResizablePanelGroup>
+					</div>
+				</div>
+
+				<DragOverlay>
+					{activeItemData ? (
+						<div className="bg-blue-500 p-2 rounded shadow opacity-80">
+							{activeItemData.label}
+						</div>
+					) : null}
+				</DragOverlay>
+			</DndContext>
+		</>
 	);
 }
