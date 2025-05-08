@@ -59,7 +59,7 @@ export default function GlobalNavigationBar({
 
 	const currentExpansionFromPath = expansion.find(
 		(exp) =>
-			exp.name.toLowerCase().replace(/\s+/g, "-") === expansionSlugFromPath
+			exp.name.toLowerCase().replace(/\s+/g, "_") === expansionSlugFromPath
 	);
 
 	let currentRaidFromPath: raidItem | undefined;
@@ -158,7 +158,7 @@ export default function GlobalNavigationBar({
 		if (bossSlugFromPath && newSelection.raidItem?.bossList) {
 			const bossFromPath = newSelection.raidItem.bossList.find(
 				(boss) =>
-					boss.name.toLowerCase().replace(/\s+/g, "-") === bossSlugFromPath
+					boss.name.toLowerCase().replace(/\s+/g, "_") === bossSlugFromPath
 			);
 			if (bossFromPath) {
 				newSelection.bossName = bossFromPath.name;
@@ -170,7 +170,7 @@ export default function GlobalNavigationBar({
 		) {
 			const firstBoss = newSelection.raidItem.bossList[0];
 			newSelection.bossName = firstBoss.name;
-			newSelection.bossSlug = firstBoss.name.toLowerCase().replace(/\s+/g, "-");
+			newSelection.bossSlug = firstBoss.name.toLowerCase().replace(/\s+/g, "_");
 		}
 
 		setCurrentSelection(newSelection);
@@ -203,7 +203,7 @@ export default function GlobalNavigationBar({
 			newSelection.expansionName = expansionName;
 			newSelection.expansionSlug = expansionName
 				.toLowerCase()
-				.replace(/\s+/g, "-");
+				.replace(/\s+/g, "_");
 
 			// Find first raid in the selected expansion
 			const firstRaid = raids.find((raid) => raid.expansion === expansionName);
@@ -218,7 +218,7 @@ export default function GlobalNavigationBar({
 					newSelection.bossName = firstBoss.name;
 					newSelection.bossSlug = firstBoss.name
 						.toLowerCase()
-						.replace(/\s+/g, "-");
+						.replace(/\s+/g, "_");
 					targetUrl = `/planner/wow/${newSelection.expansionSlug}/${newSelection.raidSlug}/${newSelection.bossSlug}`;
 				} else {
 					newSelection.bossName = null;
@@ -247,7 +247,7 @@ export default function GlobalNavigationBar({
 		if (raid.bossList && raid.bossList.length > 0) {
 			const firstBoss = raid.bossList[0];
 			newSelection.bossName = firstBoss.name;
-			newSelection.bossSlug = firstBoss.name.toLowerCase().replace(/\s+/g, "-");
+			newSelection.bossSlug = firstBoss.name.toLowerCase().replace(/\s+/g, "_");
 		} else {
 			newSelection.bossName = null;
 			newSelection.bossSlug = null;
@@ -255,7 +255,7 @@ export default function GlobalNavigationBar({
 
 		// Construct URL
 		const expansionSlug =
-			raid.expansion?.toLowerCase().replace(/\s+/g, "-") ||
+			raid.expansion?.toLowerCase().replace(/\s+/g, "_") ||
 			currentSelection.expansionSlug ||
 			"all";
 
@@ -288,11 +288,11 @@ export default function GlobalNavigationBar({
 
 		const newSelection = { ...currentSelection };
 		newSelection.bossName = bossName;
-		newSelection.bossSlug = bossName.toLowerCase().replace(/\s+/g, "-");
+		newSelection.bossSlug = bossName.toLowerCase().replace(/\s+/g, "_");
 
 		const expansionSlug =
 			currentSelection.expansionSlug ||
-			currentSelection.expansionName.toLowerCase().replace(/\s+/g, "-");
+			currentSelection.expansionName.toLowerCase().replace(/\s+/g, "_");
 		const raidSlug =
 			currentSelection.raidSlug || currentSelection.raidItem.raidNameSlug;
 		const bossSlug = newSelection.bossSlug;

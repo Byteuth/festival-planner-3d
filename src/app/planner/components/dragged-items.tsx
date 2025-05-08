@@ -18,7 +18,7 @@ import {
 	wowMarkers,
 	wowRoles,
 } from "@/lib/gameData";
-import { MarkerOverlay } from "./draggable-markers";
+import { MarkerOverlay } from "./draggable-extras";
 
 const getItemImageSrc = (
 	type: string | undefined,
@@ -121,15 +121,15 @@ interface TrackedItem {
 	position: [number, number, number];
 }
 
-interface DraggedPlayersProps {
+interface DraggedItemsProps {
 	items: DraggedItemData[];
 	setSelectedUnit: (unit: string | null) => void;
 }
 
-export default function DraggedPlayers({
+export default function DraggedItems({
 	items,
 	setSelectedUnit,
-}: DraggedPlayersProps) {
+}: DraggedItemsProps) {
 	const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 	const screenToWorld = useScreenToWorld();
 	const { handleSnapToGround } = useSnapToGround();

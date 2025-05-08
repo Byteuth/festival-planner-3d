@@ -8,7 +8,7 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
-import DraggedPlayers from "./dragged-player";
+import DraggedItems from "./dragged-items";
 import { useControls } from "leva";
 import { DraggedItemData } from "../types/planner-types";
 
@@ -136,7 +136,7 @@ export default function EncounterCanvas({
 				mouseButtons={{ left: 0, middle: 2, right: 1, wheel: 16 }}
 			/>
 
-			<DraggedPlayers items={items} setSelectedUnit={setSelectedUnit} />
+			<DraggedItems items={items} setSelectedUnit={setSelectedUnit} />
 		
 		</Canvas>
 	);

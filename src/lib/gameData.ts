@@ -1,4 +1,8 @@
-import { DraggableClassesData, DraggableMarkerData } from "@/app/planner/components/draggable-markers";
+import {
+	DraggableClassesData,
+	DraggableMarkerData,
+} from "@/app/planner/components/draggable-extras";
+import { DraggableNPCData } from "@/app/planner/components/draggable-npc";
 import { DraggablePlayerData } from "@/app/planner/components/draggable-player";
 import { expansionItem, raidItem } from "@/types/gameData";
 
@@ -110,7 +114,7 @@ export const raids: raidItem[] = [
 				name: "Golemagg the Incinerator",
 				id: 8,
 				image:
-					"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-magmadar.png",
+					"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-golemagg-the-incinerator.png",
 			},
 			{
 				name: "Majordomo Executus",
@@ -591,8 +595,16 @@ export const wowClassColors: Record<string, string> = {
 	Warrior: "#C69B6D",
 };
 export const wowClasses: DraggableClassesData[] = [
-	{ label: "Death Knight", imageSrc: "/images/classes/deathknight.png", type: "class" },
-	{ label: "Demon Hunter", imageSrc: "/images/classes/demonhunter.png", type: "class" },
+	{
+		label: "Death Knight",
+		imageSrc: "/images/classes/deathknight.png",
+		type: "class",
+	},
+	{
+		label: "Demon Hunter",
+		imageSrc: "/images/classes/demonhunter.png",
+		type: "class",
+	},
 	{ label: "druid", imageSrc: "/images/classes/druid.png", type: "class" },
 	{ label: "evoker", imageSrc: "/images/classes/evoker.png", type: "class" },
 	{ label: "hunter", imageSrc: "/images/classes/hunter.png", type: "class" },
@@ -605,86 +617,82 @@ export const wowClasses: DraggableClassesData[] = [
 	{ label: "warlock", imageSrc: "/images/classes/warlock.png", type: "class" },
 	{ label: "warrior", imageSrc: "/images/classes/warrior.png", type: "class" },
 ];
-
 export const wowMarkers: DraggableMarkerData[] = [
 	{
 		label: "star",
 		imageSrc: "/images/markers/star.png",
 		type: "marker",
-		color: '#d7d364'
+		color: "#d7d364",
 	},
 	{
 		label: "circle",
 		imageSrc: "/images/markers/circle.png",
 		type: "marker",
-		color: '#dfa943'
+		color: "#dfa943",
 	},
 	{
 		label: "diamond",
 		imageSrc: "/images/markers/diamond.png",
 		type: "marker",
-		color: '#c14dcf'
+		color: "#c14dcf",
 	},
 	{
 		label: "triangle",
 		imageSrc: "/images/markers/triangle.png",
 		type: "marker",
-		color: '#60b83b'
+		color: "#60b83b",
 	},
 	{
 		label: "moon",
 		imageSrc: "/images/markers/moon.png",
 		type: "marker",
-		color: '#9bb7c7'
+		color: "#9bb7c7",
 	},
 	{
 		label: "square",
 		imageSrc: "/images/markers/square.png",
 		type: "marker",
-		color: '#2f60de'
+		color: "#2f60de",
 	},
 	{
 		label: "cross",
 		imageSrc: "/images/markers/cross.png",
 		type: "marker",
-		color: '#a42d1c'
+		color: "#a42d1c",
 	},
 	{
 		label: "skull",
 		imageSrc: "/images/markers/skull.png",
 		type: "marker",
-		color: '#101010'
+		color: "#101010",
 	},
 ];
-
 export const wowRoles: DraggableMarkerData[] = [
 	{
 		label: "mdps",
 		imageSrc: "/images/roles/mdps.png",
 		type: "roles",
-		color: '#5d1209'
+		color: "#5d1209",
 	},
 	{
 		label: "rdps",
 		imageSrc: "/images/roles/rdps.png",
 		type: "roles",
-		color: '#5d1209'
+		color: "#5d1209",
 	},
 	{
 		label: "tank",
 		imageSrc: "/images/roles/tank.png",
 		type: "roles",
-		color: '#010b44'
+		color: "#010b44",
 	},
 	{
 		label: "healer",
 		imageSrc: "/images/roles/healer.png",
 		type: "roles",
-		color: '#194136'
+		color: "#194136",
 	},
-
 ];
-
 export const draggableItems: DraggablePlayerData[] = [
 	{
 		id: "Helethy",
@@ -750,4 +758,156 @@ export const draggableItems: DraggablePlayerData[] = [
 	{ id: "sphere-item-22", type: "player", label: "Add Sphere 22" },
 	{ id: "sphere-item-23", type: "player", label: "Add Sphere 23" },
 	{ id: "sphere-item-24", type: "player", label: "Add Sphere 24" },
+];
+export const draggableNPCs: DraggableNPCData[] = [
+	{
+		name: "Lucifron",
+		id: "lucifron",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "lucifron",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-lucifron.png",
+	},
+	{
+		name: "Flamewaker Protector",
+		id: "flamewaker_protector",
+		label: "add_npc",
+		type: "npc",
+		encounter: "lucifron",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-lucifron.png",
+	},
+	{
+		name: "Magmadar",
+		id: "magmadar",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "magmadar",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-magmadar.png",
+	},
+	{
+		name: "Gehennas",
+		id: "gehennas",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "gehennas",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-gehennas.png",
+	},
+	{
+		name: "Flamewaker",
+		id: "flamewaker",
+		label: "add_npc",
+		type: "npc",
+		encounter: "gehennas",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-gehennas.png",
+	},
+	{
+		name: "Garr",
+		id: "garr",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "garr",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-garr.png",
+	},
+	{
+		name: "Firesworn",
+		id: "firesworn",
+		label: "add_npc",
+		type: "npc",
+		encounter: "garr",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-garr.png",
+	},
+	{
+		name: "Baron Geddon",
+		id: "baron_geddon",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "baron_geddon",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-baron-geddon.png",
+	},
+	{
+		name: "Shazzrah",
+		id: "shazzrah",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "shazzrah",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-shazzrah.png",
+	},
+	{
+		name: "Sulfuron Harbinger",
+		id: "sulfuron_harbinger",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "sulfuron_harbinger",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-sulfuron-harbinger.png",
+	},
+	{
+		name: "Flamewaker Priest",
+		id: "flamewaker Priest",
+		label: "add_npc",
+		type: "npc",
+		encounter: "sulfuron_harbinger",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-sulfuron-harbinger.png",
+	},
+	{
+		name: "Golemagg the Incinerator",
+		id: "golemagg_the_incinerator",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "golemagg_the_incinerator",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-golemagg-the-incinerator.png",
+	},{
+		name: "Core Rager",
+		id: "core_rager",
+		label: "add_npc",
+		type: "npc",
+		encounter: "golemagg_the_incinerator",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-magmadar.png",
+	},
+	{
+		name: "Majordomo Executus",
+		id: "majordomo_executus",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "majordomo_executus",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-majordomo-executus.png",
+	},
+	{
+		name: "Flamewaker Elite",
+		id: "flamewaker_elite",
+		label: "add_npc",
+		type: "npc",
+		encounter: "majordomo_executus",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-sulfuron-harbinger.png",
+	},
+	{
+		name: "Flamewaker Healer",
+		id: "flamewaker_healer",
+		label: "add_npc",
+		type: "npc",
+		encounter: "majordomo_executus",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-sulfuron-harbinger.png",
+	},
+	{
+		name: "Ragnaros",
+		id: "ragnaros",
+		label: "boss_npc",
+		type: "npc",
+		encounter: "ragnaros",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-ragnaros.png",
+	},
+	{
+		name: "Son of Flame",
+		id: "son_of_flame",
+		label: "add_npc",
+		type: "npc",
+		encounter: "ragnaros",
+		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-baron-geddon.png",
+	},
+
 ];

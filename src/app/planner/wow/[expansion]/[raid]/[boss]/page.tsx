@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/resizable";
 import {
 	draggableItems,
+	draggableNPCs,
 	raids,
 	wowClasses,
 	wowMarkers,
@@ -45,9 +46,14 @@ import {
 	DraggableRoles,
 	MarkerOverlay,
 	RolesOverlay,
-} from "@/app/planner/components/draggable-markers";
+} from "@/app/planner/components/draggable-extras";
 import { Separator } from "@/components/ui/separator";
 import { DraggedItemData } from "@/app/planner/types/planner-types";
+import {
+	DraggableNPC,
+	NPCOverlay,
+} from "@/app/planner/components/draggable-npc";
+import { usePathname } from "next/navigation";
 
 interface NavigationSelection {
 	expansionName: string | null;
@@ -114,7 +120,11 @@ export default function Page() {
 		playerClass?: string;
 		imageSrc?: string;
 		label?: string;
+		name?: string;
 	} | null>(null);
+	const pathname = usePathname();
+	const pathSegments = pathname.split("/").filter((segment) => segment !== "");
+	const encounterName = pathSegments[pathSegments.length - 1];
 
 	useEffect(() => {
 		const bgColor = raids.find(
@@ -138,13 +148,21 @@ export default function Page() {
 		const data = active.data.current;
 		if (data) {
 			const itemType = data.itemType;
-			console.log("itemType", itemType);
 			if (itemType === "player") {
 				setActiveItem({
 					id: data.id,
 					type: itemType,
 					playerClass: data.playerClass,
 					label: data.label,
+				});
+			}
+			if (itemType === "npc") {
+				setActiveItem({
+					id: data.id,
+					type: itemType,
+					imageSrc: data.image,
+					label: data.label,
+					name: data.name,
 				});
 			}
 			if (itemType === "marker") {
@@ -233,6 +251,7 @@ export default function Page() {
 								<div className="flex h-full items-center justify-center p-6 border">
 									<ScrollArea className="w-full h-full">
 										<Accordion type="single" collapsible className="w-full">
+											{/* Players*/}
 											<AccordionItem value="item-1">
 												<AccordionTrigger>Players</AccordionTrigger>
 												<AccordionContent>
@@ -248,7 +267,32 @@ export default function Page() {
 													))}
 												</AccordionContent>
 											</AccordionItem>
+											{/* NPCS*/}
 											<AccordionItem value="item-2">
+												<AccordionTrigger>NPC</AccordionTrigger>
+												<AccordionContent>
+													{draggableNPCs
+														.filter(
+															(item) =>
+																encounterName &&
+																item.encounter === encounterName
+														)
+														.map((item) => (
+															<div key={item.id} className="pb-1">
+																<DraggableNPC
+																	id={item.id}
+																	label={item.label}
+																	type={item.type}
+																	name={item.name}
+																	image={item.image}
+																	encounter={item.encounter}
+																/>
+															</div>
+														))}
+												</AccordionContent>
+											</AccordionItem>
+											{/* Extras*/}
+											<AccordionItem value="item-3">
 												<AccordionTrigger>
 													Classes, Roles and Markers
 												</AccordionTrigger>
@@ -355,6 +399,11 @@ export default function Page() {
 							<MarkerOverlay
 								imageSrc={activeItem.imageSrc}
 								label={activeItem.label || ""}
+							/>
+						) : activeItem.type === "npc" && activeItem.imageSrc ? (
+							<NPCOverlay
+								imageSrc={activeItem.imageSrc}
+								name={activeItem.name || ""}
 							/>
 						) : null)}
 				</DragOverlay>
