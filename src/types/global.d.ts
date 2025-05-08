@@ -14,6 +14,7 @@ declare module "react" {
             planeGeometry: ThreeElements["planeGeometry"];
             sphereGeometry: ThreeElements["sphereGeometry"];
             boxGeometry: ThreeElements["boxGeometry"];
+            cylinderGeometry: ThreeElements["cylinderGeometry"]
             meshStandardMaterial: ThreeElements["meshStandardMaterial"];
             meshBasicMaterial: ThreeElements["meshBasicMaterial"];
             meshNormalMaterial: ThreeElements["meshNormalMaterial"];

@@ -7,7 +7,13 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { raids } from "@/lib/gameData";
+import {
+	draggableItems,
+	raids,
+	wowClasses,
+	wowMarkers,
+	wowRoles,
+} from "@/lib/gameData";
 import { raidItem } from "@/types/gameData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -21,8 +27,27 @@ import {
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
-import { useDraggable } from "@dnd-kit/core";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+	PlayerOverlay,
+	DraggablePlayer,
+} from "@/app/planner/components/draggable-player";
+import {
+	ClassesOverlay,
+	DraggableClasses,
+	DraggableMarker,
+	DraggableMarkerData,
+	DraggableRoles,
+	MarkerOverlay,
+	RolesOverlay,
+} from "@/app/planner/components/draggable-markers";
+import { Separator } from "@/components/ui/separator";
+import { DraggedItemData } from "@/app/planner/types/planner-types";
 
 interface NavigationSelection {
 	expansionName: string | null;
@@ -31,37 +56,6 @@ interface NavigationSelection {
 	raidSlug: string | null;
 	bossName: string | null;
 	bossSlug: string | null;
-}
-
-interface DraggableItemData {
-	type: string;
-	id: string;
-	label: string;
-	mouseDropPosition?: [number, number];
-}
-
-function DraggableItem({ id, label, type }: DraggableItemData) {
-	const { attributes, listeners, setNodeRef, transform } = useDraggable({
-		id: id,
-		data: { type: "draggableItem", id: id, label: label, itemType: type },
-	});
-	const style = transform
-		? {
-				transform: CSS.Translate.toString(transform),
-		  }
-		: {};
-
-	return (
-		<div
-			ref={setNodeRef}
-			style={style}
-			{...listeners}
-			{...attributes}
-			className="bg-red-500 border border-black p-2 mb-2 cursor-grab active:cursor-grabbing"
-		>
-			{label}
-		</div>
-	);
 }
 
 function DroppableArea({
@@ -103,7 +97,7 @@ export default function Page() {
 	);
 	const [backgroundColor, setBackgroundColor] = useState<string>("");
 	const [activeId, setActiveId] = useState<string | null>(null);
-	const [canvasItems, setCanvasItems] = useState<DraggableItemData[]>([]);
+	const [canvasItems, setCanvasItems] = useState<DraggedItemData[]>([]);
 	const mousePositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
@@ -113,7 +107,14 @@ export default function Page() {
 		})
 	);
 	const canvasDroppableId = "encounter-canvas-droppable";
-	const [selectedUnit, setSelectedUnit] = useState<string | null>(null); //selected 3d unit
+	const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
+	const [activeItem, setActiveItem] = useState<{
+		id: string;
+		type: string;
+		playerClass?: string;
+		imageSrc?: string;
+		label?: string;
+	} | null>(null);
 
 	useEffect(() => {
 		const bgColor = raids.find(
@@ -130,16 +131,53 @@ export default function Page() {
 	}, []);
 
 	const handleDragStart = (event: DragStartEvent) => {
-		setActiveId(event.active.id as string);
+		const { active } = event;
+		setActiveId(active.id as string);
 		mousePositionRef.current = { x: 0, y: 0 };
+
+		const data = active.data.current;
+		if (data) {
+			const itemType = data.itemType;
+			console.log("itemType", itemType);
+			if (itemType === "player") {
+				setActiveItem({
+					id: data.id,
+					type: itemType,
+					playerClass: data.playerClass,
+					label: data.label,
+				});
+			}
+			if (itemType === "marker") {
+				setActiveItem({
+					id: data.label,
+					type: itemType,
+					imageSrc: data.imageSrc,
+					label: data.label,
+				});
+			}
+			if (itemType === "roles") {
+				setActiveItem({
+					id: data.label,
+					type: itemType,
+					imageSrc: data.imageSrc,
+					label: data.label,
+				});
+			} else if (itemType === "class") {
+				setActiveItem({
+					id: data.label,
+					type: itemType,
+					imageSrc: data.imageSrc,
+					label: data.label,
+				});
+			}
+		}
+
 		document.addEventListener("mousemove", handleNativeMouseMove);
 	};
 
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
-		const draggedItemData = active.data.current as
-			| DraggableItemData
-			| undefined;
+		const draggedItemData = active.data.current as DraggedItemData;
 
 		document.removeEventListener("mousemove", handleNativeMouseMove);
 
@@ -147,10 +185,11 @@ export default function Page() {
 			const droppedOverId = over.id;
 
 			if (droppedOverId === canvasDroppableId) {
-				const newItem: DraggableItemData = {
+				const newItem: DraggedItemData = {
 					id: `${draggedItemData.id}-${Date.now()}`,
-					type: draggedItemData.type,
+					type: draggedItemData.itemType,
 					label: draggedItemData.label,
+					playerClass: draggedItemData.playerClass,
 					mouseDropPosition: [
 						mousePositionRef.current.x,
 						mousePositionRef.current.y,
@@ -164,27 +203,11 @@ export default function Page() {
 				);
 			}
 		}
+
 		setActiveId(null);
+		setActiveItem(null);
 		mousePositionRef.current = { x: 0, y: 0 };
 	};
-
-	const draggableItems: DraggableItemData[] = [
-		{ id: "sphere-item-1", type: "sphere", label: "Add Sphere 1" },
-		{ id: "sphere-item-2", type: "sphere", label: "Add Sphere 2" },
-		{ id: "cube-item-1", type: "cube", label: "Add Cube 1" },
-	];
-
-	const activeItemData = activeId
-		? draggableItems.find((item) => item.id === activeId)
-		: null;
-
-	useEffect(() => {
-		if (selectedUnit) {
-			console.log(`Selected unit: ${selectedUnit}`);
-		} else {
-			console.log("No unit selected.");
-		}
-	}, [selectedUnit]);
 
 	return (
 		<>
@@ -206,24 +229,83 @@ export default function Page() {
 							direction="horizontal"
 							className="h-full w-full"
 						>
-							<ResizablePanel defaultSize={20}>
+							<ResizablePanel defaultSize={15}>
 								<div className="flex h-full items-center justify-center p-6 border">
 									<ScrollArea className="w-full h-full">
-										{draggableItems.map((item) => (
-											<DraggableItem
-												key={item.id}
-												id={item.id}
-												label={item.label}
-												type={item.type}
-											/>
-										))}
+										<Accordion type="single" collapsible className="w-full">
+											<AccordionItem value="item-1">
+												<AccordionTrigger>Players</AccordionTrigger>
+												<AccordionContent>
+													{draggableItems.map((item) => (
+														<div key={item.id} className="pb-1">
+															<DraggablePlayer
+																id={item.id}
+																label={item.label}
+																type={item.type}
+																playerClass={item.playerClass}
+															/>
+														</div>
+													))}
+												</AccordionContent>
+											</AccordionItem>
+											<AccordionItem value="item-2">
+												<AccordionTrigger>
+													Classes, Roles and Markers
+												</AccordionTrigger>
+												<AccordionContent>
+													<div>
+														<span className="truncate text-xs select-none font-semibold">
+															Classes
+														</span>
+														<div className="flex flex-row items-center gap-1 flex-wrap">
+															{wowClasses.map((item) => (
+																<DraggableClasses
+																	key={item.label}
+																	label={item.label}
+																	type={item.type}
+																	imageSrc={item.imageSrc}
+																/>
+															))}
+														</div>
+														<Separator className="my-4" />
+														<span className="truncate text-xs select-none font-semibold">
+															Roles
+														</span>
+														<div className="flex flex-row items-center gap-1 flex-wrap">
+															{wowRoles.map((item) => (
+																<DraggableRoles
+																	key={item.label}
+																	label={item.label}
+																	type={item.type}
+																	imageSrc={item.imageSrc}
+																/>
+															))}
+														</div>
+														<Separator className="my-4" />
+														<span className="truncate text-xs select-none font-semibold">
+															Markers
+														</span>
+														<div className="flex flex-row items-center gap-1 flex-wrap">
+															{wowMarkers.map((item) => (
+																<DraggableMarker
+																	key={item.label}
+																	label={item.label}
+																	type={item.type}
+																	imageSrc={item.imageSrc}
+																/>
+															))}
+														</div>
+													</div>
+												</AccordionContent>
+											</AccordionItem>
+										</Accordion>
 									</ScrollArea>
 								</div>
 							</ResizablePanel>
 
 							<ResizableHandle withHandle />
 
-							<ResizablePanel defaultSize={60} className="relative">
+							<ResizablePanel defaultSize={85} className="relative">
 								<DroppableArea
 									id={canvasDroppableId}
 									className="flex h-full w-full items-center justify-center"
@@ -235,7 +317,6 @@ export default function Page() {
 									/>
 								</DroppableArea>
 
-								{/* Unit-frame */}
 								{selectedUnit && (
 									<div className="absolute top-0 left-0 flex items-center justify-center p-4">
 										<div className="flex items-center">
@@ -249,24 +330,33 @@ export default function Page() {
 									</div>
 								)}
 							</ResizablePanel>
-
-							<ResizableHandle withHandle />
-
-							<ResizablePanel defaultSize={20}>
-								<div className="flex h-full items-center justify-center p-6 rounded>">
-									<p>Right Panel</p>
-								</div>
-							</ResizablePanel>
 						</ResizablePanelGroup>
 					</div>
 				</div>
 
 				<DragOverlay>
-					{activeItemData ? (
-						<div className="bg-blue-500 p-2 rounded shadow opacity-80">
-							{activeItemData.label}
-						</div>
-					) : null}
+					{activeItem &&
+						(activeItem.type === "player" ? (
+							<PlayerOverlay
+								id={activeItem.id}
+								playerClass={activeItem.playerClass}
+							/>
+						) : activeItem.type === "class" && activeItem.imageSrc ? (
+							<ClassesOverlay
+								imageSrc={activeItem.imageSrc}
+								label={activeItem.label || ""}
+							/>
+						) : activeItem.type === "roles" && activeItem.imageSrc ? (
+							<RolesOverlay
+								imageSrc={activeItem.imageSrc}
+								label={activeItem.label || ""}
+							/>
+						) : activeItem.type === "marker" && activeItem.imageSrc ? (
+							<MarkerOverlay
+								imageSrc={activeItem.imageSrc}
+								label={activeItem.label || ""}
+							/>
+						) : null)}
 				</DragOverlay>
 			</DndContext>
 		</>

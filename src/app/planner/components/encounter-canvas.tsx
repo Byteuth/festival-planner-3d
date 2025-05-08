@@ -8,9 +8,9 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
-import DraggedPlayers from "./draggable-player";
-import { DraggableItemData } from "../types/planner-types";
+import DraggedPlayers from "./dragged-player";
 import { useControls } from "leva";
+import { DraggedItemData } from "../types/planner-types";
 
 function Floor() {
 	const meshRef = useRef<THREE.Mesh>(null);
@@ -111,14 +111,9 @@ export default function EncounterCanvas({
 	setSelectedUnit,
 }: {
 	backgroundColor: string;
-	items: DraggableItemData[];
+	items: DraggedItemData[];
 	setSelectedUnit: (unit: string | null) => void;
 }) {
-
-
-	useEffect(() => {
-		console.log("items", items);
-	}, [items]);
 
 	return (
 		<Canvas

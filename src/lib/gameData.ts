@@ -1,3 +1,5 @@
+import { DraggableClassesData, DraggableMarkerData } from "@/app/planner/components/draggable-markers";
+import { DraggablePlayerData } from "@/app/planner/components/draggable-player";
 import { expansionItem, raidItem } from "@/types/gameData";
 
 export const expansion: expansionItem[] = [
@@ -123,7 +125,7 @@ export const raids: raidItem[] = [
 					"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-ragnaros.png",
 			},
 		],
-        background: '#C9451B'
+		background: "#C9451B",
 	},
 	{
 		title: "Onyxia",
@@ -141,7 +143,7 @@ export const raids: raidItem[] = [
 					"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-onyxia.png",
 			},
 		],
-        background: '#674355'
+		background: "#674355",
 	},
 	{
 		title: "Zul'Gurub",
@@ -213,7 +215,7 @@ export const raids: raidItem[] = [
 					"https://wow.zamimg.com/modelviewer/classic/webthumbs/npc/191/15295.png",
 			},
 		],
-        background: '#556B2F'
+		background: "#556B2F",
 	},
 
 	{
@@ -268,7 +270,7 @@ export const raids: raidItem[] = [
 					"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-nefarian.png",
 			},
 		],
-        background: '#F40006'
+		background: "#F40006",
 	},
 	{
 		title: "Ahn'Qiraj",
@@ -326,7 +328,7 @@ export const raids: raidItem[] = [
 				image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-cthun.png",
 			},
 		],
-        background: '#662B5B'
+		background: "#662B5B",
 	},
 
 	{
@@ -428,7 +430,7 @@ export const raids: raidItem[] = [
 					"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-kelthuzad.png",
 			},
 		],
-        background: '#2A0134'
+		background: "#2A0134",
 	},
 	{
 		title: "Scarlet Enclave",
@@ -488,7 +490,7 @@ export const raids: raidItem[] = [
 					"https://assets.rpglogs.com/img/warcraft/bosses/3189-icon.jpg?v=2",
 			},
 		],
-        background: '#FF2400'
+		background: "#FF2400",
 	},
 	{
 		title: "Karazhan",
@@ -572,4 +574,180 @@ export const raids: raidItem[] = [
 			},
 		],
 	},
+];
+export const wowClassColors: Record<string, string> = {
+	"Death Knight": "#C41E3A",
+	"Demon Hunter": "#A330C9",
+	Druid: "#FF7C0A",
+	Evoker: "#33937F",
+	Hunter: "#AAD372",
+	Mage: "#3FC7EB",
+	Monk: "#00FF98",
+	Paladin: "#F48CBA",
+	Priest: "#FFFFFF",
+	Rogue: "#FFF468",
+	Shaman: "#0070DD",
+	Warlock: "#8788EE",
+	Warrior: "#C69B6D",
+};
+export const wowClasses: DraggableClassesData[] = [
+	{ label: "Death Knight", imageSrc: "/images/classes/deathknight.png", type: "class" },
+	{ label: "Demon Hunter", imageSrc: "/images/classes/demonhunter.png", type: "class" },
+	{ label: "druid", imageSrc: "/images/classes/druid.png", type: "class" },
+	{ label: "evoker", imageSrc: "/images/classes/evoker.png", type: "class" },
+	{ label: "hunter", imageSrc: "/images/classes/hunter.png", type: "class" },
+	{ label: "mage", imageSrc: "/images/classes/mage.png", type: "class" },
+	{ label: "monk", imageSrc: "/images/classes/monk.png", type: "class" },
+	{ label: "paladin", imageSrc: "/images/classes/paladin.png", type: "class" },
+	{ label: "priest", imageSrc: "/images/classes/priest.png", type: "class" },
+	{ label: "rogue", imageSrc: "/images/classes/rogue.png", type: "class" },
+	{ label: "shaman", imageSrc: "/images/classes/shaman.png", type: "class" },
+	{ label: "warlock", imageSrc: "/images/classes/warlock.png", type: "class" },
+	{ label: "warrior", imageSrc: "/images/classes/warrior.png", type: "class" },
+];
+
+export const wowMarkers: DraggableMarkerData[] = [
+	{
+		label: "star",
+		imageSrc: "/images/markers/star.png",
+		type: "marker",
+		color: '#d7d364'
+	},
+	{
+		label: "circle",
+		imageSrc: "/images/markers/circle.png",
+		type: "marker",
+		color: '#dfa943'
+	},
+	{
+		label: "diamond",
+		imageSrc: "/images/markers/diamond.png",
+		type: "marker",
+		color: '#c14dcf'
+	},
+	{
+		label: "triangle",
+		imageSrc: "/images/markers/triangle.png",
+		type: "marker",
+		color: '#60b83b'
+	},
+	{
+		label: "moon",
+		imageSrc: "/images/markers/moon.png",
+		type: "marker",
+		color: '#9bb7c7'
+	},
+	{
+		label: "square",
+		imageSrc: "/images/markers/square.png",
+		type: "marker",
+		color: '#2f60de'
+	},
+	{
+		label: "cross",
+		imageSrc: "/images/markers/cross.png",
+		type: "marker",
+		color: '#a42d1c'
+	},
+	{
+		label: "skull",
+		imageSrc: "/images/markers/skull.png",
+		type: "marker",
+		color: '#101010'
+	},
+];
+
+export const wowRoles: DraggableMarkerData[] = [
+	{
+		label: "mdps",
+		imageSrc: "/images/roles/mdps.png",
+		type: "roles",
+		color: '#5d1209'
+	},
+	{
+		label: "rdps",
+		imageSrc: "/images/roles/rdps.png",
+		type: "roles",
+		color: '#5d1209'
+	},
+	{
+		label: "tank",
+		imageSrc: "/images/roles/tank.png",
+		type: "roles",
+		color: '#010b44'
+	},
+	{
+		label: "healer",
+		imageSrc: "/images/roles/healer.png",
+		type: "roles",
+		color: '#194136'
+	},
+
+];
+
+export const draggableItems: DraggablePlayerData[] = [
+	{
+		id: "Helethy",
+		type: "player",
+		label: "Add Sphere 1",
+		playerClass: "Warlock",
+	},
+	{ id: "Uth", type: "player", label: "Add Sphere 2", playerClass: "Hunter" },
+	{
+		id: "Pannastab",
+		type: "player",
+		label: "Add Sphere 3",
+		playerClass: "Rogue",
+	},
+	{
+		id: "Cynn",
+		type: "player",
+		label: "Add Sphere 4",
+		playerClass: "Hunter",
+	},
+	{
+		id: "Landre",
+		type: "player",
+		label: "Add Sphere 5",
+		playerClass: "Mage",
+	},
+	{
+		id: "Marizugg",
+		type: "player",
+		label: "Add Sphere 6",
+		playerClass: "Warrior",
+	},
+	{
+		id: "Pemano",
+		type: "player",
+		label: "Add Sphere 7",
+		playerClass: "Priest",
+	},
+	{
+		id: "Test1",
+		type: "player",
+		label: "Add Sphere 8",
+		playerClass: "Death Knight",
+	},
+	{
+		id: "Test2",
+		type: "player",
+		label: "Add Sphere 9",
+		playerClass: "Demon Hunter",
+	},
+	{ id: "sphere-item-10", type: "player", label: "Add Sphere 10" },
+	{ id: "sphere-item-11", type: "player", label: "Add Sphere 11" },
+	{ id: "sphere-item-12", type: "player", label: "Add Sphere 12" },
+	{ id: "sphere-item-13", type: "player", label: "Add Sphere 13" },
+	{ id: "sphere-item-14", type: "player", label: "Add Sphere 14" },
+	{ id: "sphere-item-15", type: "player", label: "Add Sphere 15" },
+	{ id: "sphere-item-16", type: "player", label: "Add Sphere 16" },
+	{ id: "sphere-item-17", type: "player", label: "Add Sphere 17" },
+	{ id: "sphere-item-18", type: "player", label: "Add Sphere 18" },
+	{ id: "sphere-item-19", type: "player", label: "Add Sphere 19" },
+	{ id: "sphere-item-20", type: "player", label: "Add Sphere 20" },
+	{ id: "sphere-item-21", type: "player", label: "Add Sphere 21" },
+	{ id: "sphere-item-22", type: "player", label: "Add Sphere 22" },
+	{ id: "sphere-item-23", type: "player", label: "Add Sphere 23" },
+	{ id: "sphere-item-24", type: "player", label: "Add Sphere 24" },
 ];
