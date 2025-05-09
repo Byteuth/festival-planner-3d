@@ -123,7 +123,7 @@ interface TrackedItem {
 
 interface DraggedItemsProps {
 	items: DraggedItemData[];
-	setSelectedUnit: (unit: string | null) => void;
+	setSelectedUnit: (unit: DraggedItemData | null) => void;
 }
 
 export default function DraggedItems({
@@ -265,7 +265,7 @@ export default function DraggedItems({
 		setDraggingItemId(null);
 	};
 
-	const handleMeshClick = (itemId: string | undefined, event: THREE.Event) => {
+	const handleMeshClick = (itemId: string | undefined, item: DraggedItemData, event: THREE.Event) => {
 		if (itemId === undefined) {
 			console.warn("Clicked item is missing an ID.");
 			return;
@@ -278,7 +278,7 @@ export default function DraggedItems({
 			setSelectedUnit(null);
 		} else {
 			setSelectedItemId(itemId);
-			setSelectedUnit(itemId);
+			setSelectedUnit(item);
 		}
 	};
 
@@ -342,7 +342,7 @@ interface MeshPropsType {
 interface DynamicMeshWrapperProps {
 	item: DraggedItemData;
 	itemId: string;
-	handleMeshClick: (id: string | undefined, event: THREE.Event) => void;
+	handleMeshClick: (id: string | undefined, item: DraggedItemData, event: THREE.Event) => void;
 	refCallback: (ref: THREE.Mesh | null) => void;
 	isSelected: boolean;
 	handleDrag: (
@@ -369,7 +369,7 @@ const DynamicMeshWrapper: React.FC<DynamicMeshWrapperProps> = ({
 		const baseProps = {
 			castShadow: true,
 			position: [0, 0.5, 0] as [number, number, number],
-			onClick: (event: THREE.Event) => handleMeshClick(itemId, event),
+			onClick: (event: THREE.Event) => handleMeshClick(itemId, item, event),
 			geometryType: "box" as const,
 			color: "gray",
 			texturePath: null,

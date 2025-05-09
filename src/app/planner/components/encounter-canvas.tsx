@@ -112,7 +112,7 @@ export default function EncounterCanvas({
 }: {
 	backgroundColor: string;
 	items: DraggedItemData[];
-	setSelectedUnit: (unit: string | null) => void;
+	setSelectedUnit: (unit: DraggedItemData | null) => void;
 }) {
 
 	return (

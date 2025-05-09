@@ -18,7 +18,6 @@ import { Button } from "../ui/button";
 import { expansion, raids } from "@/lib/gameData";
 import { raidItem } from "@/types/gameData";
 
-
 interface NavigationSelection {
 	expansionName: string | null;
 	expansionSlug: string | null;
@@ -30,7 +29,7 @@ interface NavigationSelection {
 
 export default function GlobalNavigationBar({
 	currentSelection,
-	setCurrentSelection
+	setCurrentSelection,
 }: {
 	currentSelection: NavigationSelection;
 	setCurrentSelection: (selection: NavigationSelection) => void;
@@ -120,7 +119,6 @@ export default function GlobalNavigationBar({
 		);
 	}, [currentSelection.expansionName, raids, expansion]);
 
-
 	useEffect(() => {
 		const newSelection: NavigationSelection = {
 			expansionName: null,
@@ -190,7 +188,6 @@ export default function GlobalNavigationBar({
 		const newSelection = { ...currentSelection };
 
 		if (expansionName === null) {
-
 			newSelection.expansionName = null;
 			newSelection.expansionSlug = "all";
 			newSelection.raidItem = null;
@@ -268,7 +265,6 @@ export default function GlobalNavigationBar({
 
 		setCurrentSelection(newSelection);
 		router.push(targetUrl);
-
 	};
 
 	const handleSelectBoss = (bossName: string) => {
@@ -301,7 +297,6 @@ export default function GlobalNavigationBar({
 
 		setCurrentSelection(newSelection);
 		router.push(targetUrl);
-
 	};
 
 	return (
@@ -329,7 +324,6 @@ export default function GlobalNavigationBar({
 											}
 											width={140}
 											height={140}
-											// Modified image size and shape on mobile
 											className="w-8 h-8 rounded-full object-cover md:w-auto md:h-12 md:rounded-sm"
 											priority={true}
 										/>

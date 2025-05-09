@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 
 interface DraggableMarkerData {
+	name?: string;
 	type: string;
 	label: string;
 	imageSrc: string;

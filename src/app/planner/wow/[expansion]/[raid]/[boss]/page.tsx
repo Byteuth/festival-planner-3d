@@ -42,7 +42,6 @@ import {
 	ClassesOverlay,
 	DraggableClasses,
 	DraggableMarker,
-	DraggableMarkerData,
 	DraggableRoles,
 	MarkerOverlay,
 	RolesOverlay,
@@ -54,6 +53,7 @@ import {
 	NPCOverlay,
 } from "@/app/planner/components/draggable-npc";
 import { usePathname } from "next/navigation";
+import SelectedUnitFrame from "@/app/planner/components/selected-unitframe";
 
 interface NavigationSelection {
 	expansionName: string | null;
@@ -113,7 +113,7 @@ export default function Page() {
 		})
 	);
 	const canvasDroppableId = "encounter-canvas-droppable";
-	const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
+	const [selectedUnit, setSelectedUnit] = useState<DraggedItemData | null>(null);
 	const [activeItem, setActiveItem] = useState<{
 		id: string;
 		type: string;
@@ -362,16 +362,9 @@ export default function Page() {
 								</DroppableArea>
 
 								{selectedUnit && (
-									<div className="absolute top-0 left-0 flex items-center justify-center p-4">
-										<div className="flex items-center">
-											<div className="w-24 h-24 bg-black rounded-full flex-shrink-0"></div>
-											<div className="flex flex-col w-64">
-												<div className="bg-pink-500 h-8 "> {selectedUnit}</div>
-												<div className="bg-green-500 h-6 "></div>
-												<div className="bg-blue-500 h-6"></div>
-											</div>
-										</div>
-									</div>
+								<SelectedUnitFrame
+									selectedUnit={selectedUnit}
+									/>
 								)}
 							</ResizablePanel>
 						</ResizablePanelGroup>

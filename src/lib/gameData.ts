@@ -618,7 +618,7 @@ export const wowClasses: DraggableClassesData[] = [
 	{ label: "warrior", imageSrc: "/images/classes/warrior.png", type: "class" },
 ];
 export const wowMarkers: DraggableMarkerData[] = [
-	{
+	{	
 		label: "star",
 		imageSrc: "/images/markers/star.png",
 		type: "marker",
@@ -669,24 +669,29 @@ export const wowMarkers: DraggableMarkerData[] = [
 ];
 export const wowRoles: DraggableMarkerData[] = [
 	{
+		name: "Melee DPS",
 		label: "mdps",
 		imageSrc: "/images/roles/mdps.png",
 		type: "roles",
 		color: "#5d1209",
+
 	},
 	{
+		name: "Range DPS",
 		label: "rdps",
 		imageSrc: "/images/roles/rdps.png",
 		type: "roles",
 		color: "#5d1209",
 	},
 	{
+		name: "Tank",
 		label: "tank",
 		imageSrc: "/images/roles/tank.png",
 		type: "roles",
 		color: "#010b44",
 	},
-	{
+	{	
+		name: "Healer",
 		label: "healer",
 		imageSrc: "/images/roles/healer.png",
 		type: "roles",
