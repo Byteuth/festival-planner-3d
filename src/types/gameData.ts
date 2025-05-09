@@ -21,3 +21,12 @@ export interface raidItem {
 	bossList?: BossItem[];
 	background?: string;
 }
+
+
+export interface WowItemsProps {
+		name: string,
+		slug: string,
+		rarity: 'Uncommon'| 'Rare'| 'Epic'| 'Legendary' | 'Artifact'
+		imagesrc: string
+
+}

@@ -2,6 +2,11 @@ import { useDraggable } from "@dnd-kit/core";
 import Image from "next/image";
 import { CSS } from "@dnd-kit/utilities";
 
+interface LootTable {
+    exclusive: string[];
+    shared: string[];
+}
+
 interface DraggableNPCData {
 	id: string;
     name: string;
@@ -9,6 +14,7 @@ interface DraggableNPCData {
     encounter: string;
 	label: string;
     image: string;
+	lootTable?: LootTable;
 	mouseDropPosition?: [number, number];
 }
 

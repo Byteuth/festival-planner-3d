@@ -4,7 +4,7 @@ import {
 } from "@/app/planner/components/draggable-extras";
 import { DraggableNPCData } from "@/app/planner/components/draggable-npc";
 import { DraggablePlayerData } from "@/app/planner/components/draggable-player";
-import { expansionItem, raidItem } from "@/types/gameData";
+import { expansionItem, raidItem, WowItemsProps } from "@/types/gameData";
 
 export const expansion: expansionItem[] = [
 	{
@@ -618,7 +618,7 @@ export const wowClasses: DraggableClassesData[] = [
 	{ label: "warrior", imageSrc: "/images/classes/warrior.png", type: "class" },
 ];
 export const wowMarkers: DraggableMarkerData[] = [
-	{	
+	{
 		label: "star",
 		imageSrc: "/images/markers/star.png",
 		type: "marker",
@@ -674,7 +674,6 @@ export const wowRoles: DraggableMarkerData[] = [
 		imageSrc: "/images/roles/mdps.png",
 		type: "roles",
 		color: "#5d1209",
-
 	},
 	{
 		name: "Range DPS",
@@ -690,7 +689,7 @@ export const wowRoles: DraggableMarkerData[] = [
 		type: "roles",
 		color: "#010b44",
 	},
-	{	
+	{
 		name: "Healer",
 		label: "healer",
 		imageSrc: "/images/roles/healer.png",
@@ -764,6 +763,120 @@ export const draggableItems: DraggablePlayerData[] = [
 	{ id: "sphere-item-23", type: "player", label: "Add Sphere 23" },
 	{ id: "sphere-item-24", type: "player", label: "Add Sphere 24" },
 ];
+
+export const rarityColors: Record<'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Artifact', string> = {
+    Uncommon: "#1eff00",
+    Rare: "#0070dd",
+    Epic: "#a335ee",
+    Legendary: "#ff8000",
+    Artifact: "#e6cc80",
+};
+
+export const wowItems: WowItemsProps[] = [
+	{
+		name: "Choker of Enlightenment",
+		slug: "choker-of-enlightenment",
+		rarity: "Epic",
+		imagesrc: "/path/to/choker_of_enlightenment.jpg",
+	},
+	{
+		name: "Tome of Tranquilizing Shot",
+		slug: "tome-of-tranquilizing-shot",
+		rarity: "Epic",
+		imagesrc: "/path/to/tome_of_tranquilizing_shot.jpg",
+	},
+	{
+		name: "Cenarion Boots",
+		slug: "cenarion-boots",
+		rarity: "Epic",
+		imagesrc: "/path/to/cenarion_boots.jpg",
+	},
+	{
+		name: "Earthfury Boots",
+		slug: "earthfury-boots",
+		rarity: "Epic",
+		imagesrc: "/path/to/earthfury_boots.jpg",
+	},
+	{
+		name: "Lawbringer Boots",
+		slug: "lawbringer-boots",
+		rarity: "Epic",
+		imagesrc: "/path/to/lawbringer_boots.jpg",
+	},
+	{
+		name: "Felheart Gloves",
+		slug: "felheart-gloves",
+		rarity: "Epic",
+		imagesrc: "/path/to/felheart_gloves.jpg",
+	},
+	{
+		name: "Gauntlets of Might",
+		slug: "gauntlets-of-might",
+		rarity: "Epic",
+		imagesrc: "/path/to/gauntlets_of_might.jpg",
+	},
+	{
+		name: "Crimson Shocker",
+		slug: "crimson-shocker",
+		rarity: "Rare",
+		imagesrc: "/path/to/crimson_shocker.jpg",
+	},
+	{
+		name: "Flamewaker Legplates",
+		slug: "flamewaker-legplates",
+		rarity: "Epic",
+		imagesrc: "/path/to/flamewaker_legplates.jpg",
+	},
+	{
+		name: "Heavy Dark Iron Ring",
+		slug: "heavy-dark-iron-ring",
+		rarity: "Rare",
+		imagesrc: "/path/to/heavy_dark_iron_ring.jpg",
+	},
+	{
+		name: "Helm of the Lifegiver",
+		slug: "helm-of-the-lifegiver",
+		rarity: "Epic",
+		imagesrc: "/path/to/helm_of_the_lifegiver.jpg",
+	},
+	{
+		name: "Manastorm Leggings",
+		slug: "manastorm-leggings",
+		rarity: "Epic",
+		imagesrc: "/path/to/manastorm-leggings.jpg",
+	},
+	{
+		name: "Ring of Spell Power",
+		slug: "ring-of-spell-power",
+		rarity: "Epic",
+		imagesrc: "/path/to/ring_of_spell_power.jpg",
+	},
+	{
+		name: "Robe of Volatile Power",
+		slug: "robe-of-volatile-power",
+		rarity: "Epic",
+		imagesrc: "/path/to/robe_of_volatile_power.jpg",
+	},
+	{
+		name: "Salamander Scale Pants",
+		slug: "salamander-scale-pants",
+		rarity: "Epic",
+		imagesrc: "/path/to/salamander_scale_pants.jpg",
+	},
+	{
+		name: "Sorcerous Dagger",
+		slug: "sorcerous-dagger",
+		rarity: "Rare",
+		imagesrc: "/path/to/sorcerous_dagger.jpg",
+	},
+	{
+		name: "Wristguards of Stability",
+		slug: "wristguards-of-stability",
+		rarity: "Epic",
+		imagesrc: "/path/to/wristguards_of_stability.jpg",
+	},
+];
+
 export const draggableNPCs: DraggableNPCData[] = [
 	{
 		name: "Lucifron",
@@ -772,6 +885,29 @@ export const draggableNPCs: DraggableNPCData[] = [
 		type: "npc",
 		encounter: "lucifron",
 		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-lucifron.png",
+		lootTable: {
+			exclusive: [
+				"Choker of Enlightenment",
+				"Tome of Tranquilizing Shot",
+				"Cenarion Boots",
+				"Earthfury Boots",
+				"Lawbringer Boots ",
+				"Felheart Gloves",
+				"Gauntlets of Might ",
+			],
+			shared: [
+				"Crimson Shocker",
+				"Flamewaker Legplates",
+				"Heavy Dark Iron Ring",
+				"Helm of the Lifegiver",
+				"Manastorm Leggings",
+				"Ring of Spell Power",
+				"Robe of Volatile Power",
+				"Salamander Scale Pants",
+				"Sorcerous Dagger",
+				"Wristguards of Stability",
+			],
+		},
 	},
 	{
 		name: "Flamewaker Protector",
@@ -862,8 +998,10 @@ export const draggableNPCs: DraggableNPCData[] = [
 		label: "boss_npc",
 		type: "npc",
 		encounter: "golemagg_the_incinerator",
-		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-golemagg-the-incinerator.png",
-	},{
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-golemagg-the-incinerator.png",
+	},
+	{
 		name: "Core Rager",
 		id: "core_rager",
 		label: "add_npc",
@@ -912,7 +1050,7 @@ export const draggableNPCs: DraggableNPCData[] = [
 		label: "add_npc",
 		type: "npc",
 		encounter: "ragnaros",
-		image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-baron-geddon.png",
+		image:
+			"https://wow.zamimg.com/images/wow/journal/ui-ej-boss-baron-geddon.png",
 	},
-
 ];

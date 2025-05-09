@@ -54,6 +54,9 @@ import {
 } from "@/app/planner/components/draggable-npc";
 import { usePathname } from "next/navigation";
 import SelectedUnitFrame from "@/app/planner/components/selected-unitframe";
+import { Button } from "@/components/ui/button";
+import { BookOpen, BookText,  } from "lucide-react";
+import SidePanel from "@/app/planner/components/sidepanel";
 
 interface NavigationSelection {
 	expansionName: string | null;
@@ -113,7 +116,9 @@ export default function Page() {
 		})
 	);
 	const canvasDroppableId = "encounter-canvas-droppable";
-	const [selectedUnit, setSelectedUnit] = useState<DraggedItemData | null>(null);
+	const [selectedUnit, setSelectedUnit] = useState<DraggedItemData | null>(
+		null
+	);
 	const [activeItem, setActiveItem] = useState<{
 		id: string;
 		type: string;
@@ -125,6 +130,7 @@ export default function Page() {
 	const pathname = usePathname();
 	const pathSegments = pathname.split("/").filter((segment) => segment !== "");
 	const encounterName = pathSegments[pathSegments.length - 1];
+	const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		const bgColor = raids.find(
@@ -225,6 +231,11 @@ export default function Page() {
 		setActiveId(null);
 		setActiveItem(null);
 		mousePositionRef.current = { x: 0, y: 0 };
+	};
+
+
+	const togglePanel = () => {
+		setIsPanelOpen(!isPanelOpen);
 	};
 
 	return (
@@ -346,9 +357,7 @@ export default function Page() {
 									</ScrollArea>
 								</div>
 							</ResizablePanel>
-
 							<ResizableHandle withHandle />
-
 							<ResizablePanel defaultSize={85} className="relative">
 								<DroppableArea
 									id={canvasDroppableId}
@@ -360,11 +369,28 @@ export default function Page() {
 										setSelectedUnit={setSelectedUnit}
 									/>
 								</DroppableArea>
+								<div className="absolute right-0 top-0 bottom-0 flex">
+									<Button
+										onClick={togglePanel}
+										className="justify-center h-10 mt-4 translate-x-1  rounded-tr rounded-br z-10"
+										aria-label={isPanelOpen ? "Close panel" : "Open panel"}
+									>
+										{isPanelOpen ? (
+											<BookOpen size={20} />
+										) : (
+											<BookText size={20} />
+										)}
+									</Button>
+
+									{/* Panel content */}
+									{isPanelOpen && (
+										<SidePanel />
+										
+									)}
+								</div>
 
 								{selectedUnit && (
-								<SelectedUnitFrame
-									selectedUnit={selectedUnit}
-									/>
+									<SelectedUnitFrame selectedUnit={selectedUnit} />
 								)}
 							</ResizablePanel>
 						</ResizablePanelGroup>
